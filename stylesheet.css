@@ -138,11 +138,14 @@ h3 {
 }
 
 .research-photo {
-    max-width: 100%;
+    max-width: 80%;
+    width: 300px;
     height: auto;
     border-radius: 10px;
     box-shadow: 0 10px 20px rgba(0,0,0,0.1);
     transition: transform 0.3s ease;
+    display: block;
+    margin: 0 auto;
 }
 
 .research-photo:hover {
