@@ -132,6 +132,23 @@ h3 {
     }
 }
 
+/* 写真セクション */
+.photo-section {
+    margin: 2rem 0;
+}
+
+.research-photo {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+}
+
+.research-photo:hover {
+    transform: scale(1.05);
+}
+
 /* テスト用の追加スタイル */
 .test-element {
     background: #e2e8f0;
