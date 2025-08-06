@@ -87,16 +87,26 @@
         <!-- ネパール人学習者データ -->
         <div class="file-section">
             <h2>📁 ネパール人学習者データ</h2>
-            <div id="nepalese-content">
-                <div class="loading">データを読み込み中...</div>
+            <div class="subfolder-section">
+                <p style="color: #718096; margin-bottom: 1rem;">以下のリンクをクリックしてフォルダを開き、必要なファイルをダウンロードしてください</p>
+                <ul class="file-list">
+                    <li><a href="https://github.com/tazoeno/Nepalese-Learner-Corpora-of-Japanese/tree/main/プレーンテキスト_ネパール人学習者/N1" target="_blank">📁 N1フォルダを開く</a></li>
+                    <li><a href="https://github.com/tazoeno/Nepalese-Learner-Corpora-of-Japanese/tree/main/プレーンテキスト_ネパール人学習者/N2" target="_blank">📁 N2フォルダを開く</a></li>
+                    <li><a href="https://github.com/tazoeno/Nepalese-Learner-Corpora-of-Japanese/tree/main/プレーンテキスト_ネパール人学習者/N3" target="_blank">📁 N3フォルダを開く</a></li>
+                    <li><a href="https://github.com/tazoeno/Nepalese-Learner-Corpora-of-Japanese/tree/main/プレーンテキスト_ネパール人学習者/N4" target="_blank">📁 N4フォルダを開く</a></li>
+                    <li><a href="https://github.com/tazoeno/Nepalese-Learner-Corpora-of-Japanese/tree/main/プレーンテキスト_ネパール人学習者/N5" target="_blank">📁 N5フォルダを開く</a></li>
+                </ul>
             </div>
         </div>
 
         <!-- 日本語母語話者データ -->
         <div class="file-section">
             <h2>📁 日本語母語話者データ</h2>
-            <div id="native-content">
-                <div class="loading">データを読み込み中...</div>
+            <div class="subfolder-section">
+                <p style="color: #718096; margin-bottom: 1rem;">以下のリンクをクリックしてフォルダを開き、必要なファイルをダウンロードしてください</p>
+                <ul class="file-list">
+                    <li><a href="https://github.com/tazoeno/Nepalese-Learner-Corpora-of-Japanese/tree/main/プレーンテキスト_日本語母語話者" target="_blank">📁 日本語母語話者フォルダを開く</a></li>
+                </ul>
             </div>
         </div>
 
@@ -123,9 +133,6 @@
         <!-- Excel内容表示エリア -->
         <div id="excel-content" class="file-content"></div>
 
-        <!-- ファイル内容表示エリア -->
-        <div id="file-content" class="file-content"></div>
-        
         <div class="status">
             🌟 ウェブサイト構築中
         </div>
@@ -140,134 +147,6 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script>
-        const owner = 'tazoeno';
-        const repo = 'Nepalese-Learner-Corpora-of-Japanese';
-        
-        // サブフォルダを含むファイル一覧を取得
-        async function loadFilesWithSubfolders(basePath, containerId, subfolderNames = null) {
-            const container = document.getElementById(containerId);
-            
-            try {
-                if (subfolderNames) {
-                    // サブフォルダがある場合（ネパール人学習者）
-                    container.innerHTML = '';
-                    for (const subfolderName of subfolderNames) {
-                        const subfolderDiv = document.createElement('div');
-                        subfolderDiv.className = 'subfolder-section';
-                        
-                        const subfolderTitle = document.createElement('h3');
-                        subfolderTitle.textContent = `📁 ${subfolderName}`;
-                        subfolderDiv.appendChild(subfolderTitle);
-                        
-                        const fileList = document.createElement('ul');
-                        fileList.className = 'file-list';
-                        
-                        try {
-                            const subfolderPath = `${basePath}/${subfolderName}`;
-                            const response = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${encodeURIComponent(subfolderPath)}`);
-                            
-                            if (response.ok) {
-                                const files = await response.json();
-                                
-                                if (Array.isArray(files)) {
-                                    files.forEach(file => {
-                                        if (file.type === 'file' && file.name.endsWith('.txt')) {
-                                            const li = document.createElement('li');
-                                            const a = document.createElement('a');
-                                            a.href = '#';
-                                            a.textContent = `📄 ${file.name}`;
-                                            a.onclick = (e) => {
-                                                e.preventDefault();
-                                                loadFileContent(file.download_url, `${subfolderName}/${file.name}`);
-                                            };
-                                            li.appendChild(a);
-                                            fileList.appendChild(li);
-                                        }
-                                    });
-                                }
-                                
-                                if (fileList.children.length === 0) {
-                                    const li = document.createElement('li');
-                                    li.innerHTML = '<span class="loading">テキストファイルが見つかりませんでした</span>';
-                                    fileList.appendChild(li);
-                                }
-                            } else {
-                                const li = document.createElement('li');
-                                li.innerHTML = '<span class="error">フォルダの読み込みに失敗しました</span>';
-                                fileList.appendChild(li);
-                            }
-                        } catch (error) {
-                            console.error(`Error loading subfolder ${subfolderName}:`, error);
-                            const li = document.createElement('li');
-                            li.innerHTML = '<span class="error">エラーが発生しました</span>';
-                            fileList.appendChild(li);
-                        }
-                        
-                        subfolderDiv.appendChild(fileList);
-                        container.appendChild(subfolderDiv);
-                    }
-                } else {
-                    // サブフォルダがない場合（日本語母語話者）
-                    const response = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${encodeURIComponent(basePath)}`);
-                    
-                    if (response.ok) {
-                        const files = await response.json();
-                        const fileList = document.createElement('ul');
-                        fileList.className = 'file-list';
-                        
-                        if (Array.isArray(files)) {
-                            files.forEach(file => {
-                                if (file.type === 'file' && file.name.endsWith('.txt')) {
-                                    const li = document.createElement('li');
-                                    const a = document.createElement('a');
-                                    a.href = '#';
-                                    a.textContent = `📄 ${file.name}`;
-                                    a.onclick = (e) => {
-                                        e.preventDefault();
-                                        loadFileContent(file.download_url, file.name);
-                                    };
-                                    li.appendChild(a);
-                                    fileList.appendChild(li);
-                                }
-                            });
-                        }
-                        
-                        if (fileList.children.length === 0) {
-                            fileList.innerHTML = '<li class="loading">テキストファイルが見つかりませんでした</li>';
-                        }
-                        
-                        container.innerHTML = '';
-                        container.appendChild(fileList);
-                    } else {
-                        throw new Error(`HTTP ${response.status}`);
-                    }
-                }
-            } catch (error) {
-                console.error('Error loading files:', error);
-                container.innerHTML = `<div class="error">ファイルの読み込みに失敗しました: ${error.message}</div>`;
-            }
-        }
-        
-        // ファイル内容を表示
-        async function loadFileContent(url, filename) {
-            const contentDiv = document.getElementById('file-content');
-            contentDiv.style.display = 'block';
-            contentDiv.innerHTML = `<strong>${filename}</strong>の内容を読み込み中...`;
-            
-            try {
-                const response = await fetch(url);
-                if (response.ok) {
-                    const content = await response.text();
-                    contentDiv.innerHTML = `<strong>${filename}</strong><br><br>${content}`;
-                    contentDiv.scrollIntoView({ behavior: 'smooth' });
-                } else {
-                    throw new Error(`HTTP ${response.status}`);
-                }
-            } catch (error) {
-                contentDiv.innerHTML = `<strong>${filename}</strong><br><br>ファイルの読み込みに失敗しました: ${error.message}`;
-            }
-        }
-        
         // Excelファイルを読み込んで表示
         async function loadExcelFile(filename, description) {
             const contentDiv = document.getElementById('excel-content');
@@ -309,49 +188,6 @@
                 `;
             }
         }
-        
-        // デバッグ用: APIレスポンスを確認
-        async function debugAPI() {
-            console.log('=== デバッグ開始 ===');
-            console.log('Repository:', `${owner}/${repo}`);
-            
-            // リポジトリのルートディレクトリを確認
-            try {
-                const rootResponse = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/`);
-                console.log('Root response status:', rootResponse.status);
-                
-                if (rootResponse.ok) {
-                    const rootFiles = await rootResponse.json();
-                    console.log('Root directory contents:', rootFiles.map(f => ({name: f.name, type: f.type})));
-                } else {
-                    console.error('Root directory fetch failed:', await rootResponse.text());
-                }
-            } catch (error) {
-                console.error('Root directory error:', error);
-            }
-            
-            console.log('=== デバッグ終了 ===');
-        }
-        
-        // ページ読み込み時にファイル一覧を取得
-        window.onload = () => {
-            // まずデバッグ実行
-            debugAPI();
-            
-            // ネパール人学習者データ（N1-N5のサブフォルダ付き）
-            loadFilesWithSubfolders(
-                'プレーンテキスト_ネパール人学習者', 
-                'nepalese-content', 
-                ['N1', 'N2', 'N3', 'N4', 'N5']
-            );
-            
-            // 日本語母語話者データ（サブフォルダなし）
-            loadFilesWithSubfolders(
-                'プレーンテキスト_日本語母語話者', 
-                'native-content', 
-                null
-            );
-        };
     </script>
 </body>
 </html>
