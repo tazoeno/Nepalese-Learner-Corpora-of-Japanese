@@ -100,6 +100,29 @@
             </div>
         </div>
 
+        <!-- フェイスシートセクション -->
+        <div class="file-section">
+            <h2>📊 フェイスシート（参加者情報）</h2>
+            <ul class="file-list">
+                <li>
+                    <a href="フェイスシート_ネパール人学習者.xlsx" download>📄 フェイスシート_ネパール人学習者.xlsx（ダウンロード）</a>
+                    <br>
+                    <a href="#" onclick="loadExcelFile('フェイスシート_ネパール人学習者.xlsx', 'ネパール人学習者'); return false;" style="margin-left: 1rem; font-size: 0.9rem;">👁️ プレビューを表示</a>
+                </li>
+                <li>
+                    <a href="フェイスシート_日本語母語話者.xlsx" download>📄 フェイスシート_日本語母語話者.xlsx（ダウンロード）</a>
+                    <br>
+                    <a href="#" onclick="loadExcelFile('フェイスシート_日本語母語話者.xlsx', '日本語母語話者'); return false;" style="margin-left: 1rem; font-size: 0.9rem;">👁️ プレビューを表示</a>
+                </li>
+            </ul>
+            <p style="color: #718096; font-size: 0.9rem; margin-top: 0.5rem;">
+                ※ Excelファイルをダウンロードするか、プレビューで内容を確認できます
+            </p>
+        </div>
+
+        <!-- Excel内容表示エリア -->
+        <div id="excel-content" class="file-content"></div>
+
         <!-- ファイル内容表示エリア -->
         <div id="file-content" class="file-content"></div>
         
@@ -115,6 +138,7 @@
         </div>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script>
         const owner = 'tazoeno';
         const repo = 'Nepalese-Learner-Corpora-of-Japanese';
@@ -241,6 +265,48 @@
                 }
             } catch (error) {
                 contentDiv.innerHTML = `<strong>${filename}</strong><br><br>ファイルの読み込みに失敗しました: ${error.message}`;
+            }
+        }
+        
+        // Excelファイルを読み込んで表示
+        async function loadExcelFile(filename, description) {
+            const contentDiv = document.getElementById('excel-content');
+            contentDiv.style.display = 'block';
+            contentDiv.innerHTML = `<strong>${description}フェイスシート</strong>を読み込み中...`;
+            
+            try {
+                const response = await fetch(filename);
+                if (response.ok) {
+                    const arrayBuffer = await response.arrayBuffer();
+                    const workbook = XLSX.read(arrayBuffer, { type: 'array' });
+                    
+                    // 最初のシートを取得
+                    const firstSheetName = workbook.SheetNames[0];
+                    const worksheet = workbook.Sheets[firstSheetName];
+                    
+                    // HTMLテーブルに変換
+                    const htmlTable = XLSX.utils.sheet_to_html(worksheet);
+                    
+                    contentDiv.innerHTML = `
+                        <strong>${description}フェイスシート - ${firstSheetName}</strong><br><br>
+                        <div style="overflow-x: auto; max-height: 400px;">
+                            ${htmlTable}
+                        </div>
+                        <p style="margin-top: 1rem; color: #718096; font-size: 0.9rem;">
+                            完全な情報を見るには、上記のダウンロードリンクからExcelファイルをダウンロードしてください。
+                        </p>
+                    `;
+                    contentDiv.scrollIntoView({ behavior: 'smooth' });
+                } else {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+            } catch (error) {
+                console.error('Excel loading error:', error);
+                contentDiv.innerHTML = `
+                    <strong>${description}フェイスシート</strong><br><br>
+                    ファイルの読み込みに失敗しました: ${error.message}<br>
+                    直接ダウンロードしてご利用ください。
+                `;
             }
         }
         
