@@ -63,9 +63,31 @@
             overflow-y: auto;
             display: none;
         }
-        .error {
-            color: #e53e3e;
-            font-style: italic;
+        .folder-toggle {
+            cursor: pointer;
+            user-select: none;
+            padding: 0.5rem;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+        .folder-toggle:hover {
+            background-color: #e2e8f0;
+        }
+        .folder-contents {
+            display: none;
+            margin-left: 1rem;
+            margin-top: 0.5rem;
+            padding-left: 1rem;
+            border-left: 2px solid #cbd5e0;
+        }
+        .folder-contents.expanded {
+            display: block;
+        }
+        .folder-icon {
+            transition: transform 0.2s;
+        }
+        .folder-icon.expanded {
+            transform: rotate(90deg);
         }
     </style>
 </head>
@@ -84,28 +106,33 @@
             <img src="dalbhaat.JPG" alt="ダルバート" class="research-photo">
         </div>
 
-        <!-- ネパール人学習者データ -->
+        <!-- データセクション -->
         <div class="file-section">
-            <h2>📁 ネパール人学習者データ</h2>
-            <div class="subfolder-section">
-                <p style="color: #718096; margin-bottom: 1rem;">以下のリンクをクリックしてフォルダを開き、必要なファイルをダウンロードしてください</p>
+            <h2>📊 コーパスデータ</h2>
+            
+            <!-- ネパール人学習者データ -->
+            <div class="folder-toggle" onclick="toggleFolder('nepalese-folder')">
+                <span class="folder-icon" id="nepalese-icon">▶</span>
+                📁 ネパール人学習者データ
+            </div>
+            <div class="folder-contents" id="nepalese-folder">
                 <ul class="file-list">
-                    <li><a href="https://github.com/tazoeno/Nepalese-Learner-Corpora-of-Japanese/tree/main/プレーンテキスト_ネパール人学習者/N1" target="_blank">📁 N1フォルダを開く</a></li>
-                    <li><a href="https://github.com/tazoeno/Nepalese-Learner-Corpora-of-Japanese/tree/main/プレーンテキスト_ネパール人学習者/N2" target="_blank">📁 N2フォルダを開く</a></li>
-                    <li><a href="https://github.com/tazoeno/Nepalese-Learner-Corpora-of-Japanese/tree/main/プレーンテキスト_ネパール人学習者/N3" target="_blank">📁 N3フォルダを開く</a></li>
-                    <li><a href="https://github.com/tazoeno/Nepalese-Learner-Corpora-of-Japanese/tree/main/プレーンテキスト_ネパール人学習者/N4" target="_blank">📁 N4フォルダを開く</a></li>
-                    <li><a href="https://github.com/tazoeno/Nepalese-Learner-Corpora-of-Japanese/tree/main/プレーンテキスト_ネパール人学習者/N5" target="_blank">📁 N5フォルダを開く</a></li>
+                    <li><a href="https://github.com/tazoeno/Nepalese-Learner-Corpora-of-Japanese/tree/main/プレーンテキスト_ネパール人学習者/N1" target="_blank">📁 N1レベル</a></li>
+                    <li><a href="https://github.com/tazoeno/Nepalese-Learner-Corpora-of-Japanese/tree/main/プレーンテキスト_ネパール人学習者/N2" target="_blank">📁 N2レベル</a></li>
+                    <li><a href="https://github.com/tazoeno/Nepalese-Learner-Corpora-of-Japanese/tree/main/プレーンテキスト_ネパール人学習者/N3" target="_blank">📁 N3レベル</a></li>
+                    <li><a href="https://github.com/tazoeno/Nepalese-Learner-Corpora-of-Japanese/tree/main/プレーンテキスト_ネパール人学習者/N4" target="_blank">📁 N4レベル</a></li>
+                    <li><a href="https://github.com/tazoeno/Nepalese-Learner-Corpora-of-Japanese/tree/main/プレーンテキスト_ネパール人学習者/N5" target="_blank">📁 N5レベル</a></li>
                 </ul>
             </div>
-        </div>
-
-        <!-- 日本語母語話者データ -->
-        <div class="file-section">
-            <h2>📁 日本語母語話者データ</h2>
-            <div class="subfolder-section">
-                <p style="color: #718096; margin-bottom: 1rem;">以下のリンクをクリックしてフォルダを開き、必要なファイルをダウンロードしてください</p>
+            
+            <!-- 日本語母語話者データ -->
+            <div class="folder-toggle" onclick="toggleFolder('native-folder')">
+                <span class="folder-icon" id="native-icon">▶</span>
+                📁 日本語母語話者データ
+            </div>
+            <div class="folder-contents" id="native-folder">
                 <ul class="file-list">
-                    <li><a href="https://github.com/tazoeno/Nepalese-Learner-Corpora-of-Japanese/tree/main/プレーンテキスト_日本語母語話者" target="_blank">📁 日本語母語話者フォルダを開く</a></li>
+                    <li><a href="https://github.com/tazoeno/Nepalese-Learner-Corpora-of-Japanese/tree/main/プレーンテキスト_日本語母語話者" target="_blank">📁 作文・インタビューデータ</a></li>
                 </ul>
             </div>
         </div>
@@ -147,6 +174,22 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script>
+        // フォルダの展開・折りたたみ
+        function toggleFolder(folderId) {
+            const folder = document.getElementById(folderId);
+            const icon = document.getElementById(folderId.replace('-folder', '-icon'));
+            
+            if (folder.classList.contains('expanded')) {
+                folder.classList.remove('expanded');
+                icon.textContent = '▶';
+                icon.classList.remove('expanded');
+            } else {
+                folder.classList.add('expanded');
+                icon.textContent = '▼';
+                icon.classList.add('expanded');
+            }
+        }
+        
         // Excelファイルを読み込んで表示
         async function loadExcelFile(filename, description) {
             const contentDiv = document.getElementById('excel-content');
