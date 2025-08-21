@@ -89,6 +89,22 @@
         .folder-icon.expanded {
             transform: rotate(90deg);
         }
+        .info-section {
+            margin: 1.5rem 0;
+            padding: 1rem;
+            background-color: #e6fffa;
+            border-radius: 8px;
+            border-left: 4px solid #38b2ac;
+        }
+        .info-section a {
+            color: #2c7a7b;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+        .info-section a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -108,7 +124,12 @@
 
         <!-- データセクション -->
         <div class="file-section">
-            <h2>📊 コーパスデータ</h2>
+            <h2>📊 ネパール人学習者書き言葉コーパス</h2>
+            
+            <!-- コーパス詳細情報 -->
+            <div class="info-section">
+                📖 <a href="https://bumpy-sparrow-3bd.notion.site/2564e53a952180ea8b54e56a86b158f0" target="_blank">本コーパスの概要</a>
+            </div>
             
             <!-- ネパール人学習者データ -->
             <div class="folder-toggle" onclick="toggleFolder('nepalese-folder')">
